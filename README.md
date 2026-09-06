@@ -1,6 +1,6 @@
 # sk-cloud
 
-cloud-finance 可安装规范插件。含 11 个技能：防屎山、PHP、admin、前台 Web、多语言。
+cloud-finance 可安装规范插件。含防屎山、PHP、admin、前台 Web、多语言，以及项目记忆的读写协议。
 
 路径一律相对仓库根（同时包含 `webman/`、`admin/`、`uiarco/` 的目录）。不写本机绝对路径。
 
@@ -41,6 +41,9 @@ grok plugin install sk-cloud --trust
 | `sk-cloud-admin-comment` | admin 注释 |
 | `sk-cloud-web` | 前台模板 / `uiarco` |
 | `sk-cloud-i18n` | 语言键 / `LANG` / `_trans` |
+| `sk-cloud-memory` | 记住 / 忘掉项目偏好 |
+
+项目记忆存在**业务仓库** `.sk-cloud/memory/`，不进本插件。装技能只得到读写方法；偏好跟项目走。
 
 语言层另用已安装的 `php`、`vue-best-practices`、`suke-design`。冲突以本插件为准。
 

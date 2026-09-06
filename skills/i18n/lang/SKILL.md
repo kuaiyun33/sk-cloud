@@ -9,7 +9,7 @@ description: cloud-finance 前台多语言去重与归属。约束语言包目�
 
 前台语言包会注入为 `LANG`，键越多首屏越大。优先减少键数量，不按页面/模块/动作机械拆键。
 
-句式拆分与禁例见 [KEYS.md](KEYS.md)。检查命令见 [CHECKS.md](CHECKS.md)。
+句式拆分与禁例见 [KEYS.md](KEYS.md)。检查命令见 [CHECKS.md](CHECKS.md)。开工读 `.sk-cloud/memory/INDEX.md` 与 `i18n.md`；用到的记忆必须点名 id。
 
 ## 归属
 

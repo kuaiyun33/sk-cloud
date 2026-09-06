@@ -9,7 +9,7 @@ description: cloud-finance admin 后台前端项目标准。约束目录、TS/�
 
 语言层走 `vue-best-practices`；Pinia 走 `vue-pinia-best-practices`；UI 走 `suke-design`（或 `ui-ux-pro-max`）。涉及 OpenAI 走 `openai-docs`；图片性能走 `responsive-images`；明确性能优化走 `performance`。外部技能与本技能冲突时，以本技能的目录、协议字段、TS/样式分离为准。
 
-同时加载：`sk-cloud-anti-mess`、`sk-cloud-admin-reuse`、`sk-cloud-admin-comment`。
+同时加载：`sk-cloud-anti-mess`、`sk-cloud-admin-reuse`、`sk-cloud-admin-comment`。开工读 `.sk-cloud/memory/INDEX.md` 与 `admin.md`；用到的记忆必须点名 id。
 
 默认栈：Vue 3、Composition API、`<script setup lang="ts">`。禁止改回 Options API。
 
@@ -25,10 +25,10 @@ description: cloud-finance admin 后台前端项目标准。约束目录、TS/�
 
 ## 开工
 
-1. 判断职责层，打开下表。
+1. 判断职责层，打开下表。读项目记忆 INDEX 与 `admin.md`。
 2. `rg` 搜本仓库 `admin/`；旧项目仅当用户给出路径时才搜。
 3. 除 `package.json`、`vite.config.ts` 外禁止复制旧代码；先理解意图再按新边界重写。
-4. 写完跑 [CHECKS.md](CHECKS.md)。
+4. 写完跑 [CHECKS.md](CHECKS.md)。本面有记忆却未引用视为没读。
 
 不为省步骤裁掉旧底层已有的明确能力（启动、插件、动态菜单、权限、标签页、主题、设备、HTTP、基础工具）。
 

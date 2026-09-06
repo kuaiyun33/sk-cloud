@@ -7,7 +7,7 @@ description: cloud-finance webman 后端项目标准。约束目录与依赖、�
 
 语言层遵循已安装的 `php` 技能。本项目 **PHP 8.4**（`composer.json` `>=8.4`）：不使用 8.5+ 语法（如 pipe operator）。与语言技能冲突时以本技能为准。
 
-同时加载：`sk-cloud-anti-mess`、`sk-cloud-php-reuse`、`sk-cloud-php-comment`。协程另载 `sk-cloud-php-coroutine`。
+同时加载：`sk-cloud-anti-mess`、`sk-cloud-php-reuse`、`sk-cloud-php-comment`。协程另载 `sk-cloud-php-coroutine`。开工读 `.sk-cloud/memory/INDEX.md` 与 `php.md`；用到的记忆必须点名 id。
 
 ## 硬红线
 
@@ -21,9 +21,9 @@ description: cloud-finance webman 后端项目标准。约束目录与依赖、�
 
 ## 开工
 
-1. 判断职责层，打开下表对应文件。
+1. 判断职责层，打开下表对应文件。读项目记忆 INDEX 与 `php.md`。
 2. `rg` 搜本仓库；旧项目仅当用户给出路径时才搜。
-3. 先归位再写。写完反向搜索，跑 [CHECKS.md](CHECKS.md)。
+3. 先归位再写。写完反向搜索，跑 [CHECKS.md](CHECKS.md)。本面有记忆却未引用视为没读。
 
 旧项目只提供业务事实，不决定新目录、字段和风格。保留原流程能力，不为省文件裁步骤。
 

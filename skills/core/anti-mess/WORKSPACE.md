@@ -23,6 +23,16 @@
 
 也可用 `grok plugin install <插件目录> --trust`。规范内容不依赖技能库的绝对路径。
 
+## 项目记忆
+
+只属于当前业务仓库，路径：`.sk-cloud/memory/`。
+
+- `INDEX.md`：开工必读
+- `php.md` `admin.md` `web.md` `i18n.md` `gate.md`：按面再读
+- `archive.md`：作废条，开工不读
+
+没有该目录 = 尚无记忆。第一次写入用插件 `scripts/memory.py` 创建。协议见 [MEMORY.md](MEMORY.md)。不要把记忆写进公开技能仓库。
+
 ## 旧项目
 
 只作业务事实参考，不决定新目录、命名、字段和风格。

@@ -9,7 +9,7 @@ description: cloud-finance 前台 Web 标准。约束 Think 模板、Vue 片段�
 
 PHP 入口走 `sk-cloud-php` + `sk-cloud-php-comment`。语言键走 `sk-cloud-i18n`。Vue 片段补充 `vue-best-practices`。页面视觉走 `suke-design` 或 `frontend-design` / `ui-ux-pro-max`。性能走 `performance`；内容图片走 `responsive-images`。外部技能与本技能冲突时以本技能为准。
 
-同时加载：`sk-cloud-anti-mess`。前台购买与用户中心已落地，按现行代码维护；商品中心边界见 PRODUCT.md。
+同时加载：`sk-cloud-anti-mess`。开工读 `.sk-cloud/memory/INDEX.md` 与 `web.md`（改文案再读 `i18n.md`）。前台购买与用户中心已落地，按现行代码维护；商品中心边界见 PRODUCT.md。
 
 ## 硬红线
 
@@ -23,9 +23,9 @@ PHP 入口走 `sk-cloud-php` + `sk-cloud-php-comment`。语言键走 `sk-cloud-i
 
 ## 开工
 
-1. 判断改的是入口 PHP、模板、主题静态资源、全局资源还是 vuesk。
+1. 判断改的是入口 PHP、模板、主题静态资源、全局资源还是 vuesk。读项目记忆 INDEX 与 `web.md`。
 2. 改语言键先走 `sk-cloud-i18n`。
-3. 写完跑本技能 [CHECKS.md](CHECKS.md)；改键再跑 i18n CHECKS。
+3. 写完跑本技能 [CHECKS.md](CHECKS.md)；改键再跑 i18n CHECKS。本面有记忆却未引用视为没读。
 
 旧项目只提供业务意图和运行事实，禁止搬旧目录、旧驼峰字段、旧 helper。
 
