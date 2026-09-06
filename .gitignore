@@ -1,2 +1,4 @@
 .DS_Store
-*.zip
+skills/**/.claude-plugin/
+skills/**/.codex-plugin/
+skills/**/.plugin/

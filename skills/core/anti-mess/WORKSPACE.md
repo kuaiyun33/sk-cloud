@@ -19,9 +19,10 @@
 技能在仓库内：
 
 - `.cursor/skills/sk-cloud/`（插件根，技能正文在其 `skills/` 下）
-- `.grok/skills/sk-cloud/`（与上一处同源，通常为链接）
+- `.grok/skills/sk-cloud/`、`.agents/skills/sk-cloud/`（同源链接）
+- `.claude/skills/`、`.codex/skills/`（按技能名摊平的同源链接）
 
-也可用 `grok plugin install <插件目录> --trust`。规范内容不依赖技能库的绝对路径。
+本机四个客户端用插件根 `scripts/sync-clients.sh` 一键更新。规范内容不依赖技能库的绝对路径。
 
 ## 项目记忆
 

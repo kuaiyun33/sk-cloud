@@ -6,26 +6,35 @@ cloud-finance 可安装规范插件。含防屎山、PHP、admin、前台 Web、
 
 ## 安装
 
-在**业务仓库根**（含 `webman/` 或 `admin/`）执行：
+技能源只有这一份目录。Claude / Codex / Cursor / Grok 都用符号链接指向它，改文件立刻生效。
+
+在**插件根**执行：
 
 ```bash
-# 方式 A：Grok 从 GitHub 安装
-grok plugin install kuaiyun33/sk-cloud --trust
+# 只链到本机 Claude / Codex / Cursor / Grok
+bash install.sh
+```
+
+在**业务仓库根**执行（把插件目录换成你的源目录）：
+
+```bash
+# 本机四个客户端 + 链进这个仓库
+bash <插件目录>/install.sh .
 ```
 
 ```bash
-# 方式 B：克隆后链进当前仓库（Cursor + Grok 都能扫到）
-git clone git@github.com:kuaiyun33/sk-cloud.git
-sh sk-cloud/install.sh .
+# 先拉远程再链
+bash scripts/sync-clients.sh --pull --project .
 ```
 
 ```bash
-# 方式 C：已有本地目录
-grok plugin marketplace add "<插件目录>"
-grok plugin install sk-cloud --trust
+# 只检查链接
+bash scripts/sync-clients.sh --status --project .
 ```
 
-换业务仓库目录后重新跑 `install.sh`。
+也可：`grok plugin install kuaiyun33/sk-cloud --trust`。那是远程副本，改本地源不会跟着变；日常开发用上面的链接。
+
+换业务仓库目录后对那个仓库再跑 `bash install.sh <仓库根>`。
 
 ## 技能
 

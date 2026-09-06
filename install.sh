@@ -1,25 +1,17 @@
 #!/usr/bin/env bash
+# 无参数：只链本机四个客户端。传入仓库根：同时链进该业务仓库。
 set -euo pipefail
 
 plugin_root="$(cd "$(dirname "$0")" && pwd)"
-target="${1:-.}"
+target="${1:-}"
 
-if [[ ! -d "$target" ]]; then
-  echo "目标不是目录: $target" >&2
-  exit 1
+if [ -z "$target" ]; then
+  if [ -d ./webman ] || [ -d ./admin ] || [ -d ./.sk-cloud ]; then
+    target="."
+  fi
 fi
 
-target="$(cd "$target" && pwd)"
-
-if [[ ! -d "$target/webman" && ! -d "$target/admin" ]]; then
-  echo "未看到 webman/ 或 admin/，请在仓库根执行，或传入仓库根: $0 <仓库根>" >&2
-  exit 1
+if [ -n "$target" ]; then
+  exec bash "$plugin_root/scripts/sync-clients.sh" --project "$target"
 fi
-
-mkdir -p "$target/.cursor/skills" "$target/.grok/skills"
-ln -sfn "$plugin_root" "$target/.cursor/skills/sk-cloud"
-ln -sfn "../../.cursor/skills/sk-cloud" "$target/.grok/skills/sk-cloud"
-
-echo "已链接到 $target/.cursor/skills/sk-cloud"
-echo "Grok 同源链接: $target/.grok/skills/sk-cloud"
-echo "项目记忆在业务仓库 .sk-cloud/memory/，随该仓库 git 走，不在本插件。"
+exec bash "$plugin_root/scripts/sync-clients.sh"
