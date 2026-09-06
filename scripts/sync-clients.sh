@@ -15,13 +15,13 @@ project=""
 usage() {
   cat <<'EOF'
 用法：
-  bash scripts/sync-clients.sh              链到本机 Claude / Codex / Cursor / Grok
-  bash scripts/sync-clients.sh --project .  同时链进当前业务仓库
-  bash scripts/sync-clients.sh --pull       先 git pull 再链
-  bash scripts/sync-clients.sh --status     只检查，不改链接
-  bash scripts/sync-clients.sh --no-user --project .   只链仓库，不改用户目录
+  bash scripts/sync-clients.sh                 链到本机 Claude / Codex / Cursor / Grok
+  bash scripts/sync-clients.sh --pull          先 git pull 再链
+  bash scripts/sync-clients.sh --status        只检查本机链接
+  bash scripts/sync-clients.sh --clean-project <仓库根>
+      清掉业务仓库根里误放的客户端技能链接（不动 .sk-cloud 记忆、不动 .cursor/rules）
 
-改完技能：再跑一遍本脚本。符号链接指向同一份源，多数情况不用跑也会已更新。
+技能只放在本插件目录。不要链进业务仓库根。
 EOF
 }
 
@@ -43,27 +43,26 @@ while [[ $# -gt 0 ]]; do
       do_user=0
       shift
       ;;
-    --project)
+    --clean-project)
       project="${2:-}"
       if [[ -z "$project" ]]; then
-        echo "--project 需要仓库根" >&2
+        echo "--clean-project 需要仓库根" >&2
         exit 1
       fi
       shift 2
       ;;
-    --project=*)
-      project="${1#--project=}"
+    --clean-project=*)
+      project="${1#--clean-project=}"
       shift
       ;;
+    --project|--project=*)
+      echo "技能不再链进业务仓库。本机用用户目录；清旧链接请用 --clean-project <仓库根>。" >&2
+      exit 1
+      ;;
     *)
-      if [[ -z "$project" && -d "$1" ]]; then
-        project="$1"
-        shift
-      else
-        echo "未知参数: $1" >&2
-        usage >&2
-        exit 1
-      fi
+      echo "未知参数: $1" >&2
+      usage >&2
+      exit 1
       ;;
   esac
 done
@@ -252,41 +251,41 @@ install_user() {
   fi
 }
 
-install_project() {
+clean_project() {
   local root="$1"
+  local path
   if [[ ! -d "$root" ]]; then
     echo "目标不是目录: $root" >&2
     exit 1
   fi
   root="$(cd "$root" && pwd)"
-  if [[ ! -d "$root/webman" && ! -d "$root/admin" && ! -d "$root/.sk-cloud" ]]; then
-    echo "未看到 webman/、admin/ 或 .sk-cloud/，请传入业务仓库根" >&2
-    exit 1
-  fi
-  echo "== 仓库 =="
-  mkdir -p "$root/.cursor/skills" "$root/.grok/skills" "$root/.claude/skills" "$root/.codex/skills" "$root/.agents/skills"
-  bundle_into "$root/.cursor/skills"
-  flatten_into "$root/.claude/skills"
-  flatten_into "$root/.codex/skills"
-  if [[ "$do_status" -eq 1 ]]; then
-    echo "OK   $root/.grok/skills/sk-cloud"
-    echo "OK   $root/.agents/skills/sk-cloud"
-  else
-    ln -sfn "../../.cursor/skills/sk-cloud" "$root/.grok/skills/sk-cloud"
-    echo "LINK $root/.grok/skills/sk-cloud"
-    ln -sfn "../../.cursor/skills/sk-cloud" "$root/.agents/skills/sk-cloud"
-    echo "LINK $root/.agents/skills/sk-cloud"
-  fi
+  echo "== 清业务仓库客户端链接 =="
+  for path in \
+    "$root/.cursor/skills" \
+    "$root/.grok" \
+    "$root/.claude" \
+    "$root/.codex" \
+    "$root/.agents"
+  do
+    if [[ -e "$path" || -L "$path" ]]; then
+      rm -rf "$path"
+      echo "RM   $path"
+    else
+      echo "OK   $path （本来就没有）"
+    fi
+  done
+  echo "保留 $root/.sk-cloud （项目记忆）"
+  echo "保留 $root/.cursor/rules （规则指针）"
 }
 
 if [[ "$do_user" -eq 1 ]]; then
   install_user
 fi
 if [[ -n "$project" ]]; then
-  install_project "$project"
+  clean_project "$project"
 fi
 if [[ "$do_user" -eq 0 && -z "$project" ]]; then
-  echo "没有要处理的目标。加 --project <仓库根>，或去掉 --no-user。" >&2
+  echo "没有要处理的目标。" >&2
   exit 1
 fi
 

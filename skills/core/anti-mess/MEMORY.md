@@ -12,7 +12,7 @@
 | `php.md` `admin.md` `web.md` `i18n.md` `gate.md` | 进入对应面再读有效全文 |
 | `archive.md` | 作废/核对历史时才读，开工禁止读 |
 
-脚本（插件根 `scripts/memory.py`，仓库内常见 `.cursor/skills/sk-cloud/scripts/memory.py`）：
+脚本在技能包根 `scripts/memory.py`（不进业务仓库）：
 
 ```bash
 python3 scripts/memory.py --cwd . status

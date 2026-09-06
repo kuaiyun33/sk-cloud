@@ -16,13 +16,14 @@
 
 ## 规范技能位置
 
-技能在仓库内：
+技能只在 **sk-cloud 插件目录**，不进业务仓库根。本机 Claude / Codex / Cursor / Grok 用 `scripts/sync-clients.sh` 链到用户目录。
 
-- `.cursor/skills/sk-cloud/`（插件根，技能正文在其 `skills/` 下）
-- `.grok/skills/sk-cloud/`、`.agents/skills/sk-cloud/`（同源链接）
-- `.claude/skills/`、`.codex/skills/`（按技能名摊平的同源链接）
+业务仓库只留：
 
-本机四个客户端用插件根 `scripts/sync-clients.sh` 一键更新。规范内容不依赖技能库的绝对路径。
+- `.cursor/rules/`：加载指针
+- `.sk-cloud/`：项目记忆
+
+规范内容不依赖技能库的绝对路径。禁止把客户端技能目录拷进业务仓库。
 
 ## 项目记忆
 

@@ -14,15 +14,15 @@ description: cloud-finance 项目记忆的写入与作废。把稳定偏好记�
 已经说清要长期按这个做，或要拿掉某条：人话复述对象和规则，然后写或拿掉。
 
 ```bash
-python3 .cursor/skills/sk-cloud/scripts/memory.py --cwd . add --surface admin --object "对象" --rule "必须或禁止…" --source explicit
-python3 .cursor/skills/sk-cloud/scripts/memory.py --cwd . add --surface admin --object "对象" --rule "新规则" --replaces admin-001
-python3 .cursor/skills/sk-cloud/scripts/memory.py --cwd . find 橙色
-python3 .cursor/skills/sk-cloud/scripts/memory.py --cwd . forget 橙色
-python3 .cursor/skills/sk-cloud/scripts/memory.py --cwd . forget last
-python3 .cursor/skills/sk-cloud/scripts/memory.py --cwd . status
+python3 scripts/memory.py --cwd . add --surface admin --object "对象" --rule "必须或禁止…" --source explicit
+python3 scripts/memory.py --cwd . add --surface admin --object "对象" --rule "新规则" --replaces admin-001
+python3 scripts/memory.py --cwd . find 橙色
+python3 scripts/memory.py --cwd . forget 橙色
+python3 scripts/memory.py --cwd . forget last
+python3 scripts/memory.py --cwd . status
 ```
 
-插件不在 `.cursor/skills/sk-cloud` 时，改用 `.grok/skills/sk-cloud/scripts/memory.py` 或含 `plugin.json` 的插件根下 `scripts/memory.py`。找不到仓库根则不写。拿掉时按人话 `find`/`forget`，不要让用户报编号。
+在含 `plugin.json` 的技能包根下跑。`--cwd` 指向当前业务仓库。找不到仓库根则不写。拿掉时按人话 `find`/`forget`，不要让用户报编号。
 
 默认会单独提交 `.sk-cloud/`；仅当本分支只超前这一笔记忆提交时才 push。不要把其它脏文件加进去。
 
