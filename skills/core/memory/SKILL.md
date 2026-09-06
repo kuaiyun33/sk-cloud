@@ -1,15 +1,17 @@
 ---
 name: sk-cloud-memory
-description: cloud-finance 项目记忆的写入与作废。把稳定偏好记进当前仓库 .sk-cloud/memory/，供本项目共享。Use when 用户要把偏好长期遵守或作废：记住、记下来、以后都这样、写进规范、删除那条、取消、作废、不要了、去掉刚才记的，或改一条已记住的规则。不要求原话。不用于删除代码/文件，也不用于一次性改某个页面。读路径由 sk-cloud-anti-mess 强制执行。
+description: cloud-finance 项目记忆的写入与作废。把稳定偏好记进当前仓库 .sk-cloud/memory/，供本项目共享。Use when 用户用日常说法表示这个项目以后都按某偏好做，或以前记下的不要了（记一下、就这么着、删掉那条、取消、不要了、改成…）。不要求特定用词。不用于删除代码/文件，也不用于只改这一次。读路径由 sk-cloud-anti-mess 强制执行。
 ---
 
 # 项目记忆（写）
 
 完整协议：[MEMORY.md](../anti-mess/MEMORY.md)。记忆正文只在当前业务仓库 `.sk-cloud/memory/`，不进公开技能包。换电脑靠这个项目的 git 远程，不靠插件。
 
-## 立刻写
+对人听意思、用人话回。禁止教词、纠正用词、甩词表、念内部字段。
 
-用户要长期遵守或要删掉某条已记的偏好（删除、取消、不要了、忘掉都算；不要求原话）：复述面、对象、范围、规则后写入或作废。不要纠正用词。
+## 立刻写或拿掉
+
+已经说清要长期按这个做，或要拿掉某条：人话复述对象和规则，然后写或拿掉。
 
 ```bash
 python3 .cursor/skills/sk-cloud/scripts/memory.py --cwd . add --surface admin --object "对象" --rule "必须或禁止…" --source explicit
@@ -22,17 +24,14 @@ python3 .cursor/skills/sk-cloud/scripts/memory.py --cwd . status
 
 默认会单独提交 `.sk-cloud/`；仅当本分支只超前这一笔记忆提交时才 push。不要把其它脏文件加进去。
 
-## 智能写入
+## 拿不准时
 
-先复述拟写入内容并问「要写入吗？」。用户同意后再 `add --source inferred`。未表态本轮不写。默认最窄范围。删除代码不是作废记忆，见 MEMORY.md。
+先用人话复述并问能不能记到这个项目里。同意后再 `add --source inferred`。没表态本轮不写。默认最窄范围。删代码不是拿掉记忆，见 MEMORY.md。
 
 闸门、冲突、去重、场景见 MEMORY.md。不要把技能里已有的规则再记一遍。
 
 ## 写完
 
-告诉用户：id、写在哪一面、脚本里的 `switch_computer`。
+对用户：人话说明记下了或去掉了什么，以及换电脑能不能带走。可带编号（如 `admin-001`）。
 
-- `ok`：远程已有，换电脑克隆或拉取本仓库即可
-- `blocked`：只在这台电脑。按 `reason` 处理，必要时再 `sync`。禁止说成已经能换电脑
-
-下一轮相关任务必须读 INDEX 并点名该 id。
+对自己：看脚本的 `switch_computer`。`ok` 才能说换电脑能带走；`blocked` 按 `reason` 处理或 `sync`，不要把这个字段念出来。

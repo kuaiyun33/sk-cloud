@@ -1,6 +1,6 @@
 {
   "name": "sk-cloud",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "cloud-finance 开发规范：防屎山门禁、webman PHP、admin Vue、前台 Web、多语言去重。路径相对仓库根，不写死本机目录。",
   "author": {
     "name": "cloud-finance"

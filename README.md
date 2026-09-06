@@ -41,7 +41,7 @@ grok plugin install sk-cloud --trust
 | `sk-cloud-admin-comment` | admin 注释 |
 | `sk-cloud-web` | 前台模板 / `uiarco` |
 | `sk-cloud-i18n` | 语言键 / `LANG` / `_trans` |
-| `sk-cloud-memory` | 写入或作废项目偏好（按意图，不要求原话） |
+| `sk-cloud-memory` | 日常说法留下或拿掉项目偏好 |
 
 ## 项目记忆在哪
 
@@ -50,7 +50,7 @@ grok plugin install sk-cloud --trust
 | 读写协议 | 本插件 | 新电脑再装 `sk-cloud` |
 | 记忆正文（颜色/格式/命名/禁止项） | 业务仓库 `.sk-cloud/memory/` | 克隆或拉取**该业务仓库** |
 
-装技能拿不到别人的项目偏好。偏好跟代码走同一 git 远程。写入后看 `scripts/memory.py status` 的 `switch_computer`：不是 `ok` 就还在这台电脑。
+装技能拿不到别人的项目偏好。偏好跟代码走同一 git 远程。对人听日常说法、用人话回；换电脑能不能带走，看脚本 `status`，不要把字段念给用户。
 
 语言层另用已安装的 `php`、`vue-best-practices`、`suke-design`。冲突以本插件为准。
 
