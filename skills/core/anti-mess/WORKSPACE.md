@@ -31,7 +31,9 @@
 - `php.md` `admin.md` `web.md` `i18n.md` `gate.md`：按面再读
 - `archive.md`：作废条，开工不读
 
-没有该目录 = 尚无记忆。第一次写入用插件 `scripts/memory.py` 创建。协议见 [MEMORY.md](MEMORY.md)。不要把记忆写进公开技能仓库。
+没有该目录 = 尚无记忆。第一次写入用插件 `scripts/memory.py` 创建。协议见 [MEMORY.md](MEMORY.md)。
+
+换电脑：记忆在业务仓库 git 里。没提交推送 `.sk-cloud/` 就只有这台电脑有。不要把记忆写进公开技能仓库。
 
 ## 旧项目
 

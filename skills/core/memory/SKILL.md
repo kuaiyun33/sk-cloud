@@ -26,4 +26,4 @@ python3 .cursor/skills/sk-cloud/scripts/memory.py --cwd . forget <id> --reason "
 
 ## 写完
 
-告诉用户：id、写在哪一面、本机已生效；同事要拿到需提交本业务仓库。下一轮相关任务必须读 INDEX 并点名该 id。
+告诉用户：id、写在哪一面、本机已生效。换电脑或给同事：必须把 `.sk-cloud/` 提交并推送到**本业务仓库**远程，否则只在这台电脑。下一轮相关任务必须读 INDEX 并点名该 id。
