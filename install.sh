@@ -22,3 +22,4 @@ ln -sfn "../../.cursor/skills/sk-cloud" "$target/.grok/skills/sk-cloud"
 
 echo "已链接到 $target/.cursor/skills/sk-cloud"
 echo "Grok 同源链接: $target/.grok/skills/sk-cloud"
+echo "项目记忆在业务仓库 .sk-cloud/memory/，随该仓库 git 走，不在本插件。"

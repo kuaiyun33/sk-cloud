@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -46,8 +47,10 @@ def ensure_layout(root: Path) -> Path:
     if not readme.exists():
         readme.write_text(
             "# 项目记忆\n\n"
-            "本目录只属于当前业务仓库，不进公开技能包。\n"
-            "有效条见 `memory/INDEX.md`。协议见技能 `sk-cloud-anti-mess` 的 MEMORY.md。\n",
+            "本目录只属于当前业务仓库，必须随本仓库提交、推送。"
+            "换电脑：克隆或拉取本仓库即带上记忆。\n"
+            "不进公开技能包 `sk-cloud`。有效条见 `memory/INDEX.md`。"
+            "协议见技能 `sk-cloud-anti-mess` 的 MEMORY.md。\n",
             encoding="utf-8",
         )
     rebuild_index(mem)
@@ -182,6 +185,193 @@ def rebuild_index(mem: Path) -> None:
     (mem / "INDEX.md").write_text("\n".join(lines), encoding="utf-8")
 
 
+def run_git(
+    root: Path, args: list[str], timeout: int = 30
+) -> subprocess.CompletedProcess[str] | None:
+    try:
+        return subprocess.run(
+            ["git", *args],
+            cwd=root,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+        )
+    except FileNotFoundError:
+        return None
+    except subprocess.TimeoutExpired:
+        return subprocess.CompletedProcess(["git", *args], 124, "", "timeout")
+
+
+def git_out(root: Path, args: list[str]) -> str:
+    proc = run_git(root, args)
+    if proc is None or proc.returncode != 0:
+        return ""
+    return proc.stdout.strip()
+
+
+def is_git_work_tree(root: Path) -> bool:
+    proc = run_git(root, ["rev-parse", "--is-inside-work-tree"])
+    return proc is not None and proc.returncode == 0 and proc.stdout.strip() == "true"
+
+
+def is_detached_head(root: Path) -> bool:
+    proc = run_git(root, ["symbolic-ref", "-q", "HEAD"])
+    return proc is None or proc.returncode != 0
+
+
+def memory_porcelain(root: Path) -> str:
+    return git_out(root, ["status", "--porcelain", "--untracked-files=normal", "--", ".sk-cloud"])
+
+
+def short_head(root: Path) -> str:
+    return git_out(root, ["rev-parse", "--short", "HEAD"])
+
+
+def upstream_ref(root: Path) -> str:
+    return git_out(root, ["rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}"])
+
+
+def ahead_count(root: Path) -> int | None:
+    proc = run_git(root, ["rev-list", "--count", "@{u}..HEAD"])
+    if proc is None or proc.returncode != 0:
+        return None
+    text = proc.stdout.strip()
+    try:
+        return int(text)
+    except ValueError:
+        return None
+
+
+def print_kv(key: str, value: str) -> None:
+    print(f"{key}: {value}")
+
+
+def inspect_transport(root: Path) -> dict[str, str]:
+    info = {
+        "data": ".sk-cloud/memory/",
+        "plugin": "sk-cloud 只有读写协议，没有项目偏好",
+        "git": "no",
+        "commit": "",
+        "remote": "",
+        "ahead": "",
+        "dirty": "no",
+        "switch_computer": "blocked",
+        "reason": "",
+    }
+    if not is_git_work_tree(root):
+        info["reason"] = "仓库不是 git 工作树，记忆只在这台电脑"
+        return info
+    info["git"] = "yes"
+    info["commit"] = short_head(root)
+    if memory_porcelain(root):
+        info["dirty"] = "yes"
+    remote = git_out(root, ["remote", "get-url", "origin"])
+    info["remote"] = remote or "(无 origin)"
+    upstream = upstream_ref(root)
+    ahead = ahead_count(root)
+    if ahead is None:
+        info["ahead"] = "no-upstream"
+    else:
+        info["ahead"] = str(ahead)
+    if info["dirty"] == "yes":
+        info["reason"] = "`.sk-cloud/` 未提交，换电脑会丢"
+        return info
+    if not upstream or ahead is None:
+        info["reason"] = "当前分支没有上游，记忆已在本地 git，换电脑需先设定远程并 push"
+        return info
+    if ahead > 0:
+        info["reason"] = f"本地比 {upstream} 超前 {ahead} 笔，尚未 push，换电脑会丢"
+        return info
+    info["switch_computer"] = "ok"
+    info["reason"] = f"已在 {upstream}，换电脑克隆或拉取本仓库即可"
+    return info
+
+
+def sync_memory(root: Path, message: str) -> dict[str, str]:
+    result = {
+        "data": ".sk-cloud/memory/",
+        "plugin": "sk-cloud 只有读写协议，没有项目偏好",
+        "commit": "",
+        "push": "skipped",
+        "switch_computer": "blocked",
+        "reason": "",
+    }
+    if not is_git_work_tree(root):
+        result["reason"] = "不是 git 仓库，记忆只写在本机 `.sk-cloud/`"
+        return result
+    if is_detached_head(root):
+        result["reason"] = "detached HEAD，已写文件但未自动提交"
+        return result
+
+    add = run_git(root, ["add", "-A", "--", ".sk-cloud"])
+    if add is None:
+        result["reason"] = "本机没有 git"
+        return result
+    if memory_porcelain(root):
+        run_git(root, ["add", "-f", "-A", "--", ".sk-cloud"])
+
+    if memory_porcelain(root):
+        commit = run_git(
+            root,
+            ["commit", "--only", "-m", message, "--", ".sk-cloud"],
+        )
+        if commit is None or commit.returncode != 0:
+            err = (commit.stderr.strip() if commit else "") or "commit 失败"
+            result["reason"] = err.splitlines()[-1][:200]
+            return result
+        result["commit"] = short_head(root)
+    else:
+        result["commit"] = short_head(root)
+
+    upstream = upstream_ref(root)
+    ahead = ahead_count(root)
+    if not upstream or ahead is None:
+        result["reason"] = "记忆已提交，当前分支没有上游，未 push"
+        return result
+    if ahead == 0:
+        result["push"] = upstream
+        result["switch_computer"] = "ok"
+        result["reason"] = f"已在 {upstream}"
+        return result
+    if ahead > 1:
+        result["reason"] = (
+            f"记忆已单独提交 {result['commit']}，但分支比 {upstream} 还多 "
+            f"{ahead - 1} 笔其它提交，未自动 push"
+        )
+        return result
+
+    push = run_git(root, ["push"], timeout=60)
+    if push is None or push.returncode != 0:
+        err = (push.stderr.strip() if push else "") or "push 失败"
+        result["reason"] = err.splitlines()[-1][:200]
+        return result
+    result["push"] = upstream
+    result["switch_computer"] = "ok"
+    result["reason"] = f"已推送到 {upstream}"
+    return result
+
+
+def print_transport(info: dict[str, str]) -> None:
+    print_kv("data", info.get("data", ".sk-cloud/memory/"))
+    if info.get("plugin"):
+        print_kv("plugin", info["plugin"])
+    if info.get("git"):
+        print_kv("git", info["git"])
+    if info.get("commit"):
+        print_kv("commit", info["commit"])
+    if info.get("remote"):
+        print_kv("remote", info["remote"])
+    if info.get("ahead"):
+        print_kv("ahead", info["ahead"])
+    if info.get("dirty"):
+        print_kv("dirty", info["dirty"])
+    if info.get("push"):
+        print_kv("push", info["push"])
+    print_kv("switch_computer", info.get("switch_computer", "blocked"))
+    if info.get("reason"):
+        print_kv("reason", info["reason"])
+
+
 def cmd_root(root: Path) -> int:
     print(root)
     return 0
@@ -192,6 +382,20 @@ def cmd_index(root: Path) -> int:
     rebuild_index(mem)
     print((mem / "INDEX.md").read_text(encoding="utf-8"), end="")
     return 0
+
+
+def cmd_status(root: Path) -> int:
+    ensure_layout(root)
+    info = inspect_transport(root)
+    print_transport(info)
+    return 0 if info.get("switch_computer") == "ok" else 3
+
+
+def cmd_sync(root: Path, message: str) -> int:
+    ensure_layout(root)
+    info = sync_memory(root, message)
+    print_transport(info)
+    return 0 if info.get("switch_computer") == "ok" else 3
 
 
 def similar(rule: str, other: str) -> bool:
@@ -231,7 +435,14 @@ def cmd_add(root: Path, args: argparse.Namespace) -> int:
     path.write_text(text, encoding="utf-8")
     rebuild_index(mem)
     print(eid)
-    return 0
+    print_kv("file", f".sk-cloud/memory/{surface}.md")
+    if args.no_sync:
+        info = inspect_transport(root)
+        print_transport(info)
+        return 0
+    info = sync_memory(root, f"记忆: 写入 {eid}")
+    print_transport(info)
+    return 0 if info.get("switch_computer") == "ok" else 0
 
 
 def cmd_forget(root: Path, args: argparse.Namespace) -> int:
@@ -267,6 +478,13 @@ def cmd_forget(root: Path, args: argparse.Namespace) -> int:
     write_surface(mem, surface, remain)
     rebuild_index(mem)
     print(target)
+    print_kv("file", ".sk-cloud/memory/archive.md")
+    if args.no_sync:
+        info = inspect_transport(root)
+        print_transport(info)
+        return 0
+    info = sync_memory(root, f"记忆: 作废 {target}")
+    print_transport(info)
     return 0
 
 
@@ -280,6 +498,9 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="cmd", required=True)
     sub.add_parser("root", help="打印仓库根")
     sub.add_parser("index", help="重建并打印 INDEX.md")
+    sub.add_parser("status", help="记忆目录与换电脑是否已上远程")
+    sync = sub.add_parser("sync", help="只提交并在可安全时推送 .sk-cloud/")
+    sync.add_argument("--message", default="记忆: 同步")
     add = sub.add_parser("add", help="新增有效记忆")
     add.add_argument("--surface", required=True, choices=SURFACES)
     add.add_argument("--object", required=True)
@@ -287,9 +508,19 @@ def build_parser() -> argparse.ArgumentParser:
     add.add_argument("--scope", default="本面全局")
     add.add_argument("--source", default="explicit", choices=("explicit", "inferred"))
     add.add_argument("--example", default="")
+    add.add_argument(
+        "--no-sync",
+        action="store_true",
+        help="只写文件，不自动提交/推送 .sk-cloud/",
+    )
     forget = sub.add_parser("forget", help="作废一条记忆")
     forget.add_argument("id")
     forget.add_argument("--reason", default="")
+    forget.add_argument(
+        "--no-sync",
+        action="store_true",
+        help="只写文件，不自动提交/推送 .sk-cloud/",
+    )
     return parser
 
 
@@ -299,12 +530,19 @@ def main() -> int:
     start = Path(args.cwd)
     root = find_repo_root(start)
     if root is None:
-        print("找不到仓库根（需要 webman/ 且含 admin/ 或 uiarco/，或已有 .sk-cloud/）", file=sys.stderr)
+        print(
+            "找不到仓库根（需要 webman/ 且含 admin/ 或 uiarco/，或已有 .sk-cloud/）",
+            file=sys.stderr,
+        )
         return 1
     if args.cmd == "root":
         return cmd_root(root)
     if args.cmd == "index":
         return cmd_index(root)
+    if args.cmd == "status":
+        return cmd_status(root)
+    if args.cmd == "sync":
+        return cmd_sync(root, args.message)
     if args.cmd == "add":
         return cmd_add(root, args)
     if args.cmd == "forget":

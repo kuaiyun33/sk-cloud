@@ -43,7 +43,14 @@ grok plugin install sk-cloud --trust
 | `sk-cloud-i18n` | 语言键 / `LANG` / `_trans` |
 | `sk-cloud-memory` | 记住 / 忘掉项目偏好 |
 
-项目记忆存在**业务仓库** `.sk-cloud/memory/`，不进本插件。装技能只得到读写方法；偏好跟项目走。
+## 项目记忆在哪
+
+| 东西 | 位置 | 换电脑 |
+| --- | --- | --- |
+| 读写协议 | 本插件 | 新电脑再装 `sk-cloud` |
+| 记忆正文（颜色/格式/命名/禁止项） | 业务仓库 `.sk-cloud/memory/` | 克隆或拉取**该业务仓库** |
+
+装技能拿不到别人的项目偏好。偏好跟代码走同一 git 远程。写入后看 `scripts/memory.py status` 的 `switch_computer`：不是 `ok` 就还在这台电脑。
 
 语言层另用已安装的 `php`、`vue-best-practices`、`suke-design`。冲突以本插件为准。
 

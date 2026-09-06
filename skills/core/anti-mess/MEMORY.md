@@ -15,12 +15,14 @@
 脚本（插件根 `scripts/memory.py`，仓库内常见 `.cursor/skills/sk-cloud/scripts/memory.py`）：
 
 ```bash
+python3 scripts/memory.py --cwd . status
 python3 scripts/memory.py --cwd . index
 python3 scripts/memory.py --cwd . add --surface admin --object "操作列" --rule "禁止橙色，用 text 按钮" --source explicit
 python3 scripts/memory.py --cwd . forget admin-001 --reason "取消"
+python3 scripts/memory.py --cwd . sync
 ```
 
-优先用脚本，保证 id 和 INDEX 一致。脚本找不到时按本文件格式手写，并重建 INDEX。
+优先用脚本，保证 id 和 INDEX 一致。`add`/`forget` 默认会单独提交 `.sk-cloud/`；当前分支只超前这一笔时再 push。脚本找不到时按本文件格式手写，并重建 INDEX，随后必须 `sync`。
 
 ## 读（不做等于没记）
 
@@ -88,17 +90,39 @@ python3 scripts/memory.py --cwd . forget admin-001 --reason "取消"
 
 ## 存在哪、换电脑
 
-数据文件就是业务仓库里的 `.sk-cloud/memory/`，和代码放在一起，**必须提交并推送到这个项目的 git 远程**（不是公开技能仓库，也不是 Grok 个人 Memory）。
+两样东西分开：
+
+| 东西 | 在哪 | 换电脑 |
+| --- | --- | --- |
+| 读写协议 | 公开插件 `sk-cloud` | 新电脑再装一次插件 |
+| 记忆正文 | **当前业务仓库** `.sk-cloud/memory/` | 克隆或拉取**这个项目**的 git 远程 |
+
+记忆不进公开技能包，不进 Grok 个人 Memory，不进本机其它目录。找不到仓库根就只做事、不记。
+
+写入后本机立刻能读。`add`/`forget` 必须看脚本输出的 `switch_computer`：
+
+- `ok`：已在业务仓库远程，换电脑 `git clone` / `git pull` 即可
+- `blocked`：只在这台电脑。先处理 `reason`，再跑 `sync`。禁止把「已记住」说成已上远程
+
+只提交 `.sk-cloud/`，不要把当时其它脏文件塞进同一笔。分支比上游还多其它本地提交时**不自动 push**，避免把未完成的业务改动推上去。
 
 | 情况 | 记忆还在吗 |
 | --- | --- |
 | 同一台电脑、同一仓库 | 在，读 INDEX |
-| 换电脑、克隆/拉取同一业务仓库 | 在，跟着项目走 |
+| 换电脑、克隆/拉取同一业务仓库且 `.sk-cloud/` 已在远程 | 在，跟着项目走 |
 | 只装了 sk-cloud 技能、没拉这个项目 | 不在（技能没有项目偏好） |
-| 这台写了但没 `git add/commit/push` `.sk-cloud/` | 只在这台电脑，换电脑会丢 |
+| 这台写了但 `switch_computer: blocked` | 只在这台电脑，换电脑会丢 |
 | 电脑坏了、远程有这份仓库 | 从远程再拉回来 |
+| 两台电脑都在写记忆 | 先 `git pull` 再写；冲突时保留双方条目、重建 INDEX，禁止两条 active 对着干 |
 
-写入后本机立刻能读。要换电脑或给同事：把 `.sk-cloud/` 随项目提交推送。脚本 `add`/`forget` 成功后必须提醒：尚未提交则只在本机。
+换电脑步骤：
+
+1. 克隆或拉取**业务仓库**（与代码同一远程）
+2. 确认 `.sk-cloud/memory/INDEX.md` 在
+3. 安装 `sk-cloud` 插件（只有协议；记忆正文不在插件里）
+4. 开工读 INDEX
+
+禁止把 `.sk-cloud` 写进 `.gitignore`。
 
 ## 场景速查
 
@@ -118,7 +142,8 @@ python3 scripts/memory.py --cwd . forget admin-001 --reason "取消"
 | 找不到仓库根 | 不记，说明原因 |
 | 记忆目录不存在 | 第一次 `add`/`index` 创建 |
 | 本面有记忆但交付未引用 | 未读，补读 |
-| 换电脑 | 拉业务仓库；没推送过 `.sk-cloud/` 则会丢 |
+| 换电脑 | 拉业务仓库；看 `status` 的 `switch_computer` |
+| 写完但没上远程 | 跑 `sync`；仍 blocked 则说明 reason，不要假装已同步 |
 
 ## 条目字段
 

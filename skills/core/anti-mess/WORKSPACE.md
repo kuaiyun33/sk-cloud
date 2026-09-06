@@ -25,7 +25,7 @@
 
 ## 项目记忆
 
-只属于当前业务仓库，路径：`.sk-cloud/memory/`。
+只属于当前业务仓库，路径：`.sk-cloud/memory/`。公开插件只有读写协议。
 
 - `INDEX.md`：开工必读
 - `php.md` `admin.md` `web.md` `i18n.md` `gate.md`：按面再读
@@ -33,7 +33,7 @@
 
 没有该目录 = 尚无记忆。第一次写入用插件 `scripts/memory.py` 创建。协议见 [MEMORY.md](MEMORY.md)。
 
-换电脑：记忆在业务仓库 git 里。没提交推送 `.sk-cloud/` 就只有这台电脑有。不要把记忆写进公开技能仓库。
+换电脑：克隆或拉取**本业务仓库**远程。`memory.py status` 的 `switch_computer` 不是 `ok` 就还在这台电脑。不要把记忆写进公开技能仓库，不要把 `.sk-cloud` 加入 gitignore。
 
 ## 旧项目
 

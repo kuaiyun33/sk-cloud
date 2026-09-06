@@ -5,7 +5,7 @@ description: cloud-finance 项目记忆的写入与作废。把稳定偏好记�
 
 # 项目记忆（写）
 
-完整协议：[MEMORY.md](../anti-mess/MEMORY.md)。记忆只在当前业务仓库 `.sk-cloud/memory/`，不进公开技能包。
+完整协议：[MEMORY.md](../anti-mess/MEMORY.md)。记忆正文只在当前业务仓库 `.sk-cloud/memory/`，不进公开技能包。换电脑靠这个项目的 git 远程，不靠插件。
 
 ## 立刻写
 
@@ -14,9 +14,12 @@ description: cloud-finance 项目记忆的写入与作废。把稳定偏好记�
 ```bash
 python3 .cursor/skills/sk-cloud/scripts/memory.py --cwd . add --surface admin --object "对象" --rule "必须或禁止…" --source explicit
 python3 .cursor/skills/sk-cloud/scripts/memory.py --cwd . forget <id> --reason "原因"
+python3 .cursor/skills/sk-cloud/scripts/memory.py --cwd . status
 ```
 
 插件不在 `.cursor/skills/sk-cloud` 时，改用含 `plugin.json` 的插件根下 `scripts/memory.py`。找不到仓库根则不写。
+
+默认会单独提交 `.sk-cloud/`；仅当本分支只超前这一笔记忆提交时才 push。不要把其它脏文件加进去。
 
 ## 智能记住
 
@@ -26,4 +29,9 @@ python3 .cursor/skills/sk-cloud/scripts/memory.py --cwd . forget <id> --reason "
 
 ## 写完
 
-告诉用户：id、写在哪一面、本机已生效。换电脑或给同事：必须把 `.sk-cloud/` 提交并推送到**本业务仓库**远程，否则只在这台电脑。下一轮相关任务必须读 INDEX 并点名该 id。
+告诉用户：id、写在哪一面、脚本里的 `switch_computer`。
+
+- `ok`：远程已有，换电脑克隆或拉取本仓库即可
+- `blocked`：只在这台电脑。按 `reason` 处理，必要时再 `sync`。禁止说成已经能换电脑
+
+下一轮相关任务必须读 INDEX 并点名该 id。

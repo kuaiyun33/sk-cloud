@@ -11,7 +11,7 @@ description: cloud-finance 防屎山门禁与交付自检，并强制读取项�
 
 ## 记忆（必读）
 
-开工读仓库根 `.sk-cloud/memory/INDEX.md`（没有则视为空）。进入某一面再读该面 md。做事点名用到的 id。收工检查有没有违反记忆；本面有有效条却未引用，视为没读。写入规则见 MEMORY.md：先复述再写。
+开工读仓库根 `.sk-cloud/memory/INDEX.md`（没有则视为空）。进入某一面再读该面 md。做事点名用到的 id。收工检查有没有违反记忆；本面有有效条却未引用，视为没读。写入规则见 MEMORY.md：先复述再写。记忆正文随本仓库 git 远程；`switch_computer` 不是 `ok` 则换电脑带不走。
 
 ## 阶段
 
