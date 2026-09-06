@@ -41,7 +41,7 @@ grok plugin install sk-cloud --trust
 | `sk-cloud-admin-comment` | admin 注释 |
 | `sk-cloud-web` | 前台模板 / `uiarco` |
 | `sk-cloud-i18n` | 语言键 / `LANG` / `_trans` |
-| `sk-cloud-memory` | 记住 / 忘掉项目偏好 |
+| `sk-cloud-memory` | 写入或作废项目偏好（按意图，不要求原话） |
 
 ## 项目记忆在哪
 

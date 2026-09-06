@@ -513,14 +513,18 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="只写文件，不自动提交/推送 .sk-cloud/",
     )
-    forget = sub.add_parser("forget", help="作废一条记忆")
-    forget.add_argument("id")
-    forget.add_argument("--reason", default="")
-    forget.add_argument(
-        "--no-sync",
-        action="store_true",
-        help="只写文件，不自动提交/推送 .sk-cloud/",
-    )
+    def attach_forget(parser_name: str, help_text: str) -> None:
+        item = sub.add_parser(parser_name, help=help_text)
+        item.add_argument("id")
+        item.add_argument("--reason", default="")
+        item.add_argument(
+            "--no-sync",
+            action="store_true",
+            help="只写文件，不自动提交/推送 .sk-cloud/",
+        )
+
+    attach_forget("forget", "作废一条记忆")
+    attach_forget("delete", "forget 的同义命令")
     return parser
 
 
@@ -545,7 +549,7 @@ def main() -> int:
         return cmd_sync(root, args.message)
     if args.cmd == "add":
         return cmd_add(root, args)
-    if args.cmd == "forget":
+    if args.cmd in ("forget", "delete"):
         return cmd_forget(root, args)
     parser.print_help()
     return 1

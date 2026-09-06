@@ -1,17 +1,17 @@
 ---
 name: sk-cloud-anti-mess
-description: cloud-finance 防屎山门禁与交付自检，并强制读取项目记忆 INDEX。约束职责归属、商品中心边界、重复实现。Use when 在本仓库 webman 或 admin 中开发、修复、迁移、重构、审查或交付；用户提到防屎山、自检、商品中心、重复实现、兜底目录、记住、忘掉时。PHP 走 sk-cloud-php；admin 走 sk-cloud-admin；前台走 sk-cloud-web；语言键走 sk-cloud-i18n；写入记忆走 sk-cloud-memory。
+description: cloud-finance 防屎山门禁与交付自检，并强制读取项目记忆 INDEX。约束职责归属、商品中心边界、重复实现。Use when 在本仓库 webman 或 admin 中开发、修复、迁移、重构、审查或交付；用户提到防屎山、自检、商品中心、重复实现、兜底目录，或要把项目偏好写入/作废（记住、删除那条、取消、不要了，不要求原话）时。PHP 走 sk-cloud-php；admin 走 sk-cloud-admin；前台走 sk-cloud-web；语言键走 sk-cloud-i18n；写入记忆走 sk-cloud-memory。
 ---
 
 # 防屎山门禁
 
 能跑不是合格。合格标准：半年后仍能定位、复用、替换、检查。
 
-路径见 [WORKSPACE.md](WORKSPACE.md)。项目记忆协议见 [MEMORY.md](MEMORY.md)。PHP 同时加载 `sk-cloud-php`、`sk-cloud-php-reuse`、`sk-cloud-php-comment`。admin 同时加载 `sk-cloud-admin`、`sk-cloud-admin-reuse`、`sk-cloud-admin-comment`。前台加载 `sk-cloud-web`；语言键加载 `sk-cloud-i18n`。记住/忘掉走 `sk-cloud-memory`。商品中心读 [PRODUCT.md](PRODUCT.md)。检查见 [CHECKLIST.md](CHECKLIST.md)。
+路径见 [WORKSPACE.md](WORKSPACE.md)。项目记忆协议见 [MEMORY.md](MEMORY.md)。PHP 同时加载 `sk-cloud-php`、`sk-cloud-php-reuse`、`sk-cloud-php-comment`。admin 同时加载 `sk-cloud-admin`、`sk-cloud-admin-reuse`、`sk-cloud-admin-comment`。前台加载 `sk-cloud-web`；语言键加载 `sk-cloud-i18n`。项目记忆走 `sk-cloud-memory`（按意图，不要求说「记住/忘掉」）。商品中心读 [PRODUCT.md](PRODUCT.md)。检查见 [CHECKLIST.md](CHECKLIST.md)。
 
 ## 记忆（必读）
 
-开工读仓库根 `.sk-cloud/memory/INDEX.md`（没有则视为空）。进入某一面再读该面 md。做事点名用到的 id。收工检查有没有违反记忆；本面有有效条却未引用，视为没读。写入规则见 MEMORY.md：先复述再写。记忆正文随本仓库 git 远程；`switch_computer` 不是 `ok` 则换电脑带不走。
+开工读仓库根 `.sk-cloud/memory/INDEX.md`（没有则视为空）。进入某一面再读该面 md。做事点名用到的 id。收工检查有没有违反记忆；本面有有效条却未引用，视为没读。写入规则见 MEMORY.md：按意图，不设口令；智能写入先复述再写。记忆正文随本仓库 git 远程；`switch_computer` 不是 `ok` 则换电脑带不走。
 
 ## 阶段
 
