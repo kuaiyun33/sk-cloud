@@ -16,14 +16,16 @@
 
 ```bash
 python3 scripts/memory.py --cwd . status
-python3 scripts/memory.py --cwd . index
+python3 scripts/memory.py --cwd . find 橙色
 python3 scripts/memory.py --cwd . add --surface admin --object "操作列" --rule "禁止橙色，用 text 按钮" --source explicit
-python3 scripts/memory.py --cwd . forget admin-001 --reason "取消"
+python3 scripts/memory.py --cwd . add --surface admin --object "操作列" --rule "营销可用品牌橙" --replaces admin-001
+python3 scripts/memory.py --cwd . forget 橙色
+python3 scripts/memory.py --cwd . forget last
 python3 scripts/memory.py --cwd . delete admin-001 --reason "删除"
 python3 scripts/memory.py --cwd . sync
 ```
 
-优先用脚本，保证 id 和 INDEX 一致。`add`/`forget`/`delete` 默认会单独提交 `.sk-cloud/`；当前分支只超前这一笔时再 push。`delete` 与 `forget` 同义。脚本找不到时按本文件格式手写，并重建 INDEX，随后必须 `sync`。
+优先用脚本。`forget`/`delete` 可接编号、刚才、或对象/规则里的词；对上多条就停下来问人。`add --replaces` 先拿掉旧条再写新条。默认单独提交 `.sk-cloud/`；只超前这一笔且不落后远程时才 push。写前会 `fetch`，和远程分叉则不自动 push。对人只转述脚本的 `say` 行，不要念其它字段。脚本找不到时按本文件格式手写，并重建 INDEX，随后必须 `sync`。
 
 ## 读（不做等于没记）
 
@@ -71,7 +73,7 @@ python3 scripts/memory.py --cwd . sync
 
 删的是文件/按钮/接口 → 只改代码。针对「刚才记下的那条」→ 作废记忆。分不清就问一句人话：「是把这条偏好从项目里拿掉，还是只改眼前这个？」不要连续追问，不要用「作废记忆」这种词逼用户选。
 
-「刚才那条」：本轮刚写下的 id；对不上或有多条，用人话列出候选再拿掉。
+「刚才那条」：`forget last`；对不上或有多条，用人话列出候选再拿掉。不要让用户去记编号，但对人可以带一句编号方便以后说。
 
 ## 写入闸门
 
@@ -108,13 +110,13 @@ python3 scripts/memory.py --cwd . sync
 | 还没到远程 | 这台记下了，远程还没有，换电脑会丢；我去推 | 假装已经能换电脑 |
 | 编号 | 可带一句 `admin-001`，方便以后说删哪条 | 把编号当唯一沟通方式 |
 
-脚本输出给自己看。`switch_computer` 是 `ok` 才告诉用户换电脑能带走。
+对人只说 `say` 那一行。`switch_computer` 是 `ok` 才能说换电脑能带走；不要把这个字段念出来。
 
 ## 作废
 
-要拿掉某条：`forget <id>` 或 `delete <id>`（同义）。进 `archive.md`，INDEX 立刻不再出现。读路径看不到才算拿掉。
+要拿掉某条：`forget`/`delete` 接编号、刚才、或人话。进 `archive.md`，INDEX 立刻不再出现。读路径看不到才算拿掉。
 
-改口覆盖：先 forget 旧 id，再 add，新条「取代」写旧 id。禁止两条对着干的有效规则并存。用户改口时直接覆盖，不必先说某个词。
+改口覆盖：`add --replaces <旧条>`。禁止两条对着干的有效规则并存。用户改口时直接覆盖，不必先说某个词。
 
 ## 存在哪、换电脑
 
@@ -127,9 +129,10 @@ python3 scripts/memory.py --cwd . sync
 
 记忆不进公开技能包，不进 Grok 个人 Memory，不进本机其它目录。找不到仓库根就只做事、不记。
 
-写入后本机立刻能读。`add`/`forget` 必须看脚本输出的 `switch_computer`：
+写入后本机立刻能读。`add`/`forget` 必须看脚本输出：
 
-- `ok`：已在业务仓库远程，换电脑 `git clone` / `git pull` 即可
+- `say`：原话转给用户
+- `switch_computer: ok`：已在业务仓库远程
 - `blocked`：只在这台电脑。先处理 `reason`，再跑 `sync`。禁止对用户说已经能换电脑带走
 
 只提交 `.sk-cloud/`，不要把当时其它脏文件塞进同一笔。分支比上游还多其它本地提交时**不自动 push**，避免把未完成的业务改动推上去。
@@ -160,14 +163,14 @@ python3 scripts/memory.py --cwd . sync
 | 「就这么着」「记一下」 | 同上 |
 | 「金额一律两位小数」PHP 已有 Money | 不重复记；admin 展示若缺口只记 admin |
 | 「这个弹窗先改抽屉」 | 不记 |
-| 「营销可以用品牌橙」但旧条禁止橙 | 覆盖：forget 旧条再 add |
+| 「营销可以用品牌橙」但旧条禁止橙 | `add --replaces` 覆盖 |
 | 「圆角就 8px」 | 改写成 token；改不成则拒绝记 |
 | 「不要那种颜色」 | 不记，先问范围 |
 | 「这个危险按钮用红」 | 不升格为全部按钮 |
 | 「以后注释都按这段」 | 可记，存模板到示例 |
-| 「橙色那条删掉 / 取消 / 不要了」 | forget |
+| 「橙色那条删掉 / 取消 / 不要了」 | `forget 橙色`，多条则问人 |
 | 「删除这个按钮」 | 改代码，不动记忆 |
-| 「刚才那个去掉」 | forget 本轮那条；多条则用人话列出来 |
+| 「刚才那个去掉」 | `forget last` |
 | 「这里不要 Tabs」 | 默认只记当前模块 |
 | 「回复短一点」 | 不记 |
 | 找不到仓库根 | 不记，说明原因 |

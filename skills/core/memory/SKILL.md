@@ -15,12 +15,14 @@ description: cloud-finance 项目记忆的写入与作废。把稳定偏好记�
 
 ```bash
 python3 .cursor/skills/sk-cloud/scripts/memory.py --cwd . add --surface admin --object "对象" --rule "必须或禁止…" --source explicit
-python3 .cursor/skills/sk-cloud/scripts/memory.py --cwd . forget <id> --reason "原因"
-python3 .cursor/skills/sk-cloud/scripts/memory.py --cwd . delete <id> --reason "删除"
+python3 .cursor/skills/sk-cloud/scripts/memory.py --cwd . add --surface admin --object "对象" --rule "新规则" --replaces admin-001
+python3 .cursor/skills/sk-cloud/scripts/memory.py --cwd . find 橙色
+python3 .cursor/skills/sk-cloud/scripts/memory.py --cwd . forget 橙色
+python3 .cursor/skills/sk-cloud/scripts/memory.py --cwd . forget last
 python3 .cursor/skills/sk-cloud/scripts/memory.py --cwd . status
 ```
 
-插件不在 `.cursor/skills/sk-cloud` 时，改用含 `plugin.json` 的插件根下 `scripts/memory.py`。找不到仓库根则不写。
+插件不在 `.cursor/skills/sk-cloud` 时，改用 `.grok/skills/sk-cloud/scripts/memory.py` 或含 `plugin.json` 的插件根下 `scripts/memory.py`。找不到仓库根则不写。拿掉时按人话 `find`/`forget`，不要让用户报编号。
 
 默认会单独提交 `.sk-cloud/`；仅当本分支只超前这一笔记忆提交时才 push。不要把其它脏文件加进去。
 
@@ -32,6 +34,6 @@ python3 .cursor/skills/sk-cloud/scripts/memory.py --cwd . status
 
 ## 写完
 
-对用户：人话说明记下了或去掉了什么，以及换电脑能不能带走。可带编号（如 `admin-001`）。
+对用户：转述脚本 `say` 行，不要念其它字段。
 
-对自己：看脚本的 `switch_computer`。`ok` 才能说换电脑能带走；`blocked` 按 `reason` 处理或 `sync`，不要把这个字段念出来。
+对自己：`switch_computer` 是 `ok` 才能说换电脑能带走；`blocked` 按 `reason` 处理或 `sync`。
