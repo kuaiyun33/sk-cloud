@@ -1,0 +1,20 @@
+{
+  "name": "sk-cloud",
+  "description": "cloud-finance 规范技能市场（本目录即插件源）",
+  "owner": {
+    "name": "cloud-finance"
+  },
+  "plugins": [
+    {
+      "name": "sk-cloud",
+      "description": "cloud-finance 开发规范：防屎山、webman PHP、admin Vue、前台 Web、多语言去重",
+      "category": "development",
+      "version": "1.0.0",
+      "keywords": ["cloud-finance", "webman", "sk-cloud"],
+      "source": {
+        "type": "local",
+        "path": "."
+      }
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "sk-cloud",
+  "version": "1.0.0",
+  "description": "cloud-finance 开发规范：防屎山门禁、webman PHP、admin Vue、前台 Web、多语言去重。路径相对仓库根，不写死本机目录。",
+  "author": {
+    "name": "cloud-finance"
+  },
+  "license": "UNLICENSED",
+  "keywords": ["cloud-finance", "webman", "vue", "admin", "i18n"],
+  "skills": "./skills/"
+}
