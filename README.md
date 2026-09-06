@@ -40,6 +40,7 @@ bash scripts/sync-clients.sh --status --project .
 
 | 技能 | 何时用 |
 | --- | --- |
+| `sk-cloud` | 主入口，`/sk-cloud` 选这个 |
 | `sk-cloud-anti-mess` | 任何改动 |
 | `sk-cloud-php` | `webman/**/*.php` |
 | `sk-cloud-php-reuse` | 新增/迁移 PHP 能力 |

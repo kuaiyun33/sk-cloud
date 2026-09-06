@@ -84,7 +84,12 @@ root = Path(sys.argv[1])
 version = json.loads((root / "plugin.json").read_text(encoding="utf-8")).get("version", "0")
 name_re = re.compile(r"^name:\s*(.+)\s*$", re.M)
 desc_re = re.compile(r"^description:\s*(.+)\s*$", re.M)
-for skill_md in sorted((root / "skills").rglob("SKILL.md")):
+skill_files = []
+root_skill = root / "SKILL.md"
+if root_skill.is_file():
+    skill_files.append(root_skill)
+skill_files.extend(sorted((root / "skills").rglob("SKILL.md")))
+for skill_md in skill_files:
     text = skill_md.read_text(encoding="utf-8")
     name_m = name_re.search(text)
     desc_m = desc_re.search(text)
@@ -129,6 +134,9 @@ skill_name() {
 }
 
 list_skills() {
+  if [ -f "$plugin_root/SKILL.md" ]; then
+    printf '%s\n' "$plugin_root/SKILL.md"
+  fi
   find "$plugin_root/skills" -name SKILL.md -print | sort
 }
 
@@ -206,12 +214,12 @@ install_user() {
   echo "== 用户目录 =="
   cursor="$(ensure_dir "$HOME/.cursor/skills")"
   grok="$(ensure_dir "$HOME/.grok/skills")"
-  flatten_into "$cursor"
   bundle_into "$cursor"
+  flatten_into "$cursor"
   mark_seen "$cursor"
   if ! already_seen "$grok"; then
-    flatten_into "$grok"
     bundle_into "$grok"
+    flatten_into "$grok"
     mark_seen "$grok"
   fi
   if [[ -e "$HOME/.claude/skills" || -L "$HOME/.claude/skills" ]]; then
